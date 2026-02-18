@@ -8,7 +8,7 @@ import com.thong.feature.user.dto.UserProfileResponse;
 import java.util.List;
 
 public interface UserSerivce {
-    void register(CreateUserRequest createUserRequest);
+    UserProfileResponse register(CreateUserRequest createUserRequest);
     void deleteUserById(Integer id);
     UserProfileResponse getUserProfile(Integer id);
     UserProfileResponse UpdateProfileById(Integer id, UpdateProfileRequest updateProfileRequest);

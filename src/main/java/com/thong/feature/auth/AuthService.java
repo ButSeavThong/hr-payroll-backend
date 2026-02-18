@@ -8,5 +8,5 @@ import com.thong.feature.auth.dto.RegisterRequest;
 public interface AuthService {
     JwtResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
     JwtResponse login(LoginRequest loginRequest);
-    void register(RegisterRequest registerRequest);
+//    void register(RegisterRequest registerRequest);
 }

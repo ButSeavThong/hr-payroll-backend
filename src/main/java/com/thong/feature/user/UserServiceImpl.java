@@ -29,7 +29,7 @@ public class UserServiceImpl implements  UserSerivce{
 
     @Transactional
     @Override
-    public void register(CreateUserRequest createUserRequest) {
+    public UserProfileResponse register(CreateUserRequest createUserRequest) {
 
         // Validate email
         if (userRepository.existsByEmail(createUserRequest.email())) {
@@ -56,10 +56,12 @@ public class UserServiceImpl implements  UserSerivce{
 
         // set default role
         List<Role> roles = new ArrayList<>();
-        Role role = roleRepository.findByName("USER").orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,  "Role not found"));
+        Role role = roleRepository.findByName("EMPLOYEE").orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,  "Role not found"));
                 roles.add(role);
         user.setRoles(roles);
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+     return userMapper.toUserProfileResponse(user);
     }
 
     @Transactional

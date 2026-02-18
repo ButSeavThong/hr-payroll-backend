@@ -29,13 +29,13 @@ public class UserController {
     }
 
     @PatchMapping("update/{id}")
-    @PreAuthorize("hasAnyAuthority('SCOPE_USER', 'SCOPE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE', 'SCOPE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UserProfileResponse updateProfileById( @PathVariable Integer id, @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
         return userService.UpdateProfileById(id, updateProfileRequest);
     }
 
-    @PreAuthorize("hasAnyAuthority('SCOPE_USER', 'SCOPE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE', 'SCOPE_ADMIN')")
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUserProfile() {
         try {

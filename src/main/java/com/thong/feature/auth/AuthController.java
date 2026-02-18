@@ -5,6 +5,7 @@ import com.thong.feature.auth.dto.LoginRequest;
 import com.thong.feature.auth.dto.RefreshTokenRequest;
 import com.thong.feature.auth.dto.RegisterRequest;
 import com.thong.feature.user.UserSerivce;
+import com.thong.feature.user.dto.CreateUserRequest;
 import com.thong.feature.user.dto.UserProfileResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +29,12 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    @PreAuthorize("permitAll()")
-    void register(@Valid @RequestBody RegisterRequest registerRequest){
-        authService.register(registerRequest);
+    UserProfileResponse register(@Valid @RequestBody CreateUserRequest registerRequest){
+       return userSerivce.register(registerRequest);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    @PreAuthorize("permitAll()")
     JwtResponse login(@Valid @RequestBody LoginRequest loginRequest){
         return  authService.login(loginRequest);
     }

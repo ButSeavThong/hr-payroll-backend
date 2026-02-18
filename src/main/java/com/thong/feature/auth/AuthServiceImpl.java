@@ -174,44 +174,44 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    @Override
-    public void register(RegisterRequest registerRequest)  {
-
-        // Validate email
-        if (userRepository.existsByEmail(registerRequest.email())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Email already exists");
-        }
-
-        // Validate UserName
-        if (userRepository.existsByUsername(registerRequest.username())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Username already exists");
-        }
-
-        // Validate password and confirmed password
-        if (!registerRequest.password().equals(registerRequest.confirmedPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Passwords do not match");
-        }
-
-        // Transfer data from DTO to Domain Model
-        User user = userMapper.fromRegisterRequest(registerRequest);
-        user.setIsAccountNonLocked(true);
-        user.setIsAccountNonExpired(true);
-        user.setIsCredentialsNonExpired(true);
-        user.setIsBlocked(false);
-        user.setIsDeleted(false);
-        user.setCreatedAt(LocalDateTime.now());
-        user.setProfileImage("user-avatar.png");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // First Register get Default role as a user.
-        List<Role> roles = new ArrayList<>();
-        roles.add(roleRepository.findByName("USER").orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")));
-        user.setRoles(roles);
-        userRepository.save(user);
-
-    }
+//    @Override
+//    public void register(RegisterRequest registerRequest)  {
+//
+//        // Validate email
+//        if (userRepository.existsByEmail(registerRequest.email())) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT,
+//                    "Email already exists");
+//        }
+//
+//        // Validate UserName
+//        if (userRepository.existsByUsername(registerRequest.username())) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT,
+//                    "Username already exists");
+//        }
+//
+//        // Validate password and confirmed password
+//        if (!registerRequest.password().equals(registerRequest.confirmedPassword())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    "Passwords do not match");
+//        }
+//
+//        // Transfer data from DTO to Domain Model
+//        User user = userMapper.fromRegisterRequest(registerRequest);
+//        user.setIsAccountNonLocked(true);
+//        user.setIsAccountNonExpired(true);
+//        user.setIsCredentialsNonExpired(true);
+//        user.setIsBlocked(false);
+//        user.setIsDeleted(false);
+//        user.setCreatedAt(LocalDateTime.now());
+//        user.setProfileImage("user-avatar.png");
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//
+//        // First Register get Default role as a user.
+//        List<Role> roles = new ArrayList<>();
+//        roles.add(roleRepository.findByName("USER").orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")));
+//        user.setRoles(roles);
+//        userRepository.save(user);
+//
+//    }
 
 }

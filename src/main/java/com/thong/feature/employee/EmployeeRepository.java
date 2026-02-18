@@ -14,4 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     // Prevents duplicate employee profiles for the same user account
     boolean existsByUserId(Integer userId);
+
+    Optional<Object> findByUser_Email(String userEmail);
 }
