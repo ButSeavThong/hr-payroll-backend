@@ -2,39 +2,48 @@ package com.thong.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.time.YearMonth;
 
 @Entity
-@Table(name = "payrolls")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "payrolls",
+        uniqueConstraints = {
+                // Prevent duplicate payroll for same employee in same month
+                @UniqueConstraint(columnNames = {"employee_id", "month"})
+        }
+)
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Payroll {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
+    // Format: "yyyy-MM" (e.g., "2024-06")
     @Column(nullable = false)
-    private String month; // example: "2026-02"
+    private String month;
 
-    @Column(nullable = false)
+    // Snapshot of base salary at time of generation
+    // If salary changes later, historical records remain accurate
+    @Column(precision = 15, scale = 2)
     private BigDecimal baseSalary;
 
+    // overtimeHours * hourlyRate * 1.5
+    @Column(precision = 15, scale = 2)
     private BigDecimal overtimePay;
 
+    // Simplified: 10% of gross
+    @Column(precision = 15, scale = 2)
     private BigDecimal tax;
 
-    @Column(nullable = false)
+    // Net = baseSalary + overtimePay - tax
+    @Column(precision = 15, scale = 2)
     private BigDecimal netSalary;
 
+    // Lifecycle: GENERATED -> PAID
     @Column(nullable = false)
-    private String status; // GENERATED / PAID
+    private String status = "GENERATED";
 }

@@ -59,9 +59,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/speakers/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/attendances/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/payrolls/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/employees/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)))

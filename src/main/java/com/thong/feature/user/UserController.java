@@ -1,8 +1,8 @@
 package com.thong.feature.user;
 
-import com.thong.event.domain.User;
-import com.thong.event.feature.user.dto.UpdateProfileRequest;
-import com.thong.event.feature.user.dto.UserProfileResponse;
+import com.thong.domain.User;
+import com.thong.feature.user.dto.UpdateProfileRequest;
+import com.thong.feature.user.dto.UserProfileResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
