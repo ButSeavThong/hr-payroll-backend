@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/attendance")
+@RequestMapping("/api/v1/attendances")
 @RequiredArgsConstructor
 public class AttendanceController {
 
@@ -26,9 +26,9 @@ public class AttendanceController {
             .getId();
     }
 
-    // POST /api/attendance/check-in
+    // POST /api/v1/attendances/check-in
     @PostMapping("/check-in")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE')")
     public ResponseEntity<AttendanceResponse> checkIn(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody(required = false) CheckInRequest request) {
@@ -39,7 +39,7 @@ public class AttendanceController {
 
     // POST /api/attendance/check-out
     @PostMapping("/check-out")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE')")
     public ResponseEntity<AttendanceResponse> checkOut(
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(attendanceService.checkOut(resolveEmployeeId(userDetails)));
@@ -47,7 +47,7 @@ public class AttendanceController {
 
     // GET /api/attendance/my — employee sees only their own records
     @GetMapping("/my")
-    @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE', 'SCOPE_ADMIN')")
     public ResponseEntity<List<AttendanceResponse>> getMyAttendance(
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(attendanceService.getMyAttendance(resolveEmployeeId(userDetails)));
@@ -55,7 +55,7 @@ public class AttendanceController {
 
     // GET /api/attendance — admin sees all records
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE')")
     public ResponseEntity<List<AttendanceResponse>> getAllAttendance() {
         return ResponseEntity.ok(attendanceService.getAllAttendance());
     }
