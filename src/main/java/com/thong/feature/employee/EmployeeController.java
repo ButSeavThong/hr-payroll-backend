@@ -67,7 +67,7 @@ public class EmployeeController {
         assert authentication != null;
         String email = authentication.getName(); // This is the 'sub' claim from JWT
         // Find user by email
-        Employee employee = (Employee) employeeRepository.findByUser_Email(email).
+        Employee employee = employeeRepository.findByUser_Email(email).
                 orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found!"));
 
         return ResponseEntity.ok(employeeService.getMyProfile(employee.getUser().getId()));
