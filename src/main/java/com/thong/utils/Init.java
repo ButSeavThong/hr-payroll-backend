@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +25,7 @@ public class Init {
     @PostConstruct
     public void init() {
         initRoles();
-        initAdminUsers();
+        initUsers();
     }
 
     private void initRoles() {
@@ -41,36 +41,50 @@ public class Init {
         }
     }
 
-    private void initAdminUsers() {
+    private void initUsers() {
 
         Role adminRole = roleRepository.findByName("ADMIN")
                 .orElseThrow(() -> new RuntimeException("ADMIN role not found"));
+
         Role employeeRole = roleRepository.findByName("EMPLOYEE")
                 .orElseThrow(() -> new RuntimeException("EMPLOYEE role not found"));
 
-        createAdminIfNotExists(
+        // 2 ADMINS
+        createUserIfNotExists(
                 "ThongFazon",
                 "thongfazon@gmail.com",
                 "admin123",
-                adminRole,
-                employeeRole
+                List.of(adminRole)
         );
 
-        createAdminIfNotExists(
+        createUserIfNotExists(
                 "seavthong",
                 "seavthong@gmail.com",
                 "admin123",
-                adminRole,
-                employeeRole
+                List.of(adminRole)
+        );
+
+        // 2 EMPLOYEES
+        createUserIfNotExists(
+                "employee1",
+                "employee1@gmail.com",
+                "employee123",
+                List.of(employeeRole)
+        );
+
+        createUserIfNotExists(
+                "employee2",
+                "employee2@gmail.com",
+                "employee123",
+                List.of(employeeRole)
         );
     }
 
-    private void createAdminIfNotExists(
+    private void createUserIfNotExists(
             String username,
             String email,
             String rawPassword,
-            Role adminRole,
-            Role employeeRole
+            List<Role> roles
     ) {
 
         if (userRespository.existsByEmail(email)) {
@@ -82,9 +96,8 @@ public class Init {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
 
-        //  REQUIRED FIELDS (VERY IMPORTANT)
         user.setDob(LocalDate.of(2000, 1, 1));
-        user.setGender("MALE"); // or enum if you use enum
+        user.setGender("MALE");
 
         user.setIsDeleted(false);
         user.setIsBlocked(false);
@@ -92,9 +105,6 @@ public class Init {
         user.setIsAccountNonLocked(true);
         user.setIsCredentialsNonExpired(true);
 
-        List<Role> roles = new ArrayList<>();
-        roles.add(adminRole);
-        roles.add(employeeRole);
         user.setRoles(roles);
 
         userRespository.save(user);

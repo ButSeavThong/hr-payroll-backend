@@ -55,7 +55,7 @@ public class AttendanceController {
 
     // GET /api/attendance — admin sees all records
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<AttendanceResponse>> getAllAttendance() {
         return ResponseEntity.ok(attendanceService.getAllAttendance());
     }
