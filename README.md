@@ -45,8 +45,8 @@ The HR Payroll System allows organizations to manage their workforce digitally. 
 ### Backend
 | Technology | Purpose |
 |---|---|
-| Java 17 | Programming language |
-| Spring Boot 3 | Application framework |
+| Java 17 + | Programming language |
+| Spring Boot 4.0.1 | Application framework |
 | Spring Security + JWT | Authentication & authorization |
 | Spring Data JPA / Hibernate | ORM & database access |
 | PostgreSQL | Primary database |
@@ -468,7 +468,7 @@ CREATE TABLE payrolls (
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/your-username/hr-payroll-system.git
+git clone https://github.com/ButSeavThong/hr-payroll-backend.git
 cd hr-payroll-system/backend
 ```
 
