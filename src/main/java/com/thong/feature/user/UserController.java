@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
@@ -20,6 +22,12 @@ public class UserController {
     private final UserSerivce userService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN')")
+    public List<UserProfileResponse> getAllUsers() {
+        return userService.getUserProfiles();
+    }
 
     @GetMapping("/profile/{id}")
     @ResponseStatus(HttpStatus.OK)

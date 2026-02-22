@@ -34,7 +34,7 @@ public class AttendanceController {
                 .getId();
     }
 
-    // POST /api/v1/attendances/check-in
+    // POST /api/v1/attendances/check-in done !
     @PostMapping("/check-in")
     @PreAuthorize("hasAuthority('SCOPE_EMPLOYEE')")
     public ResponseEntity<AttendanceResponse> checkIn(
@@ -53,7 +53,7 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.checkIn(employee.getId(), req));
     }
 
-    // POST /api/attendance/check-out
+    // POST /api/attendance/check-out done!
     @PostMapping("/check-out")
     @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE')")
     public ResponseEntity<AttendanceResponse> checkOut(
@@ -61,7 +61,7 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.checkOut(resolveEmployeeId(authentication)));
     }
 
-    // GET /api/attendance/my — employee sees only their own records
+    // GET /api/attendance/my — employee sees only their own records done !
     @GetMapping("/my")
     @PreAuthorize("hasAnyAuthority('SCOPE_EMPLOYEE', 'SCOPE_ADMIN')")
     public ResponseEntity<List<AttendanceResponse>> getMyAttendance(
@@ -69,7 +69,7 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getMyAttendance(resolveEmployeeId(authentication)));
     }
 
-    // GET /api/attendance — admin sees all records
+    // GET /api/attendance — admin sees all records done !
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<AttendanceResponse>> getAllAttendance() {

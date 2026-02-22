@@ -12,3 +12,15 @@ spring:
       ddl-auto: update
 server:
   port: 8080
+logging:
+  level:
+    root: INFO # Default level for all loggers
+    org.springframework.web: DEBUG # Sets web-related logs to DEBUG
+    com.thong: TRACE # Sets your application's package to TRACE
+  file:
+    name: logs/thong.log # Logs to a specific file named myapp.log in a 'logs' folder
+    max-size: 10MB # Rotates log files when they reach 10MB
+    max-history: 7 # Keeps a maximum of 7 archive log files
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%t]){faint} %clr(%logger){cyan} %clr(:){faint} %m%n" # Custom console pattern with colors
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" # Custom file pattern
