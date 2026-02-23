@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -21,25 +22,28 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceMapper attendanceMapper;
 
     private static final double STANDARD_HOURS = 8.0;
-
+    // Add this constant at the top of your service
+    private static final ZoneId CAMBODIA_ZONE = ZoneId.of("Asia/Phnom_Penh");
     @Override
     @Transactional
     public AttendanceResponse checkIn(Integer employeeId, CheckInRequest request) {
-        LocalDate date = (request.date() != null) ? request.date() : LocalDate.now();
+        //  Use Cambodia time for today's date
+        LocalDate date = (request.date() != null)
+                ? request.date()
+                : LocalDate.now(CAMBODIA_ZONE);
 
-        // Business rule: only ONE check-in per employee per day
         if (attendanceRepository.findByEmployeeIdAndDate(employeeId, date).isPresent()) {
             throw new IllegalStateException("Already checked in for date: " + date);
         }
 
         var employee = employeeRepository.findById(employeeId)
-            .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
 
         var attendance = Attendance.builder()
-            .employee(employee)
-            .date(date)
-            .checkInTime(LocalDateTime.now())
-            .build();
+                .employee(employee)
+                .date(date)
+                .checkInTime(LocalDateTime.now(CAMBODIA_ZONE)) //  Cambodia time
+                .build();
 
         return attendanceMapper.toResponse(attendanceRepository.save(attendance));
     }
@@ -47,24 +51,24 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional
     public AttendanceResponse checkOut(Integer employeeId) {
+        //  Use Cambodia date to find today's record
+        LocalDate today = LocalDate.now(CAMBODIA_ZONE);
+
         var attendance = attendanceRepository
-            .findByEmployeeIdAndDate(employeeId, LocalDate.now())
-            .orElseThrow(() -> new RuntimeException("No check-in found for today"));
+                .findByEmployeeIdAndDate(employeeId, today)
+                .orElseThrow(() -> new RuntimeException("No check-in found for today"));
 
         if (attendance.getCheckOutTime() != null) {
             throw new IllegalStateException("Already checked out today");
         }
 
-        LocalDateTime checkOut = LocalDateTime.now();
+        LocalDateTime checkOut = LocalDateTime.now(CAMBODIA_ZONE); //  Cambodia time
         attendance.setCheckOutTime(checkOut);
 
-        // Duration.between gives exact precision
-        // toMinutes() / 60.0 gives fractional hours (e.g., 9h 30m = 9.5)
         Duration duration = Duration.between(attendance.getCheckInTime(), checkOut);
         double totalHours = duration.toMinutes() / 60.0;
         attendance.setTotalHours(totalHours);
 
-        // Overtime = hours beyond 8. Math.max(0,...) ensures never negative.
         double overtime = Math.max(0, totalHours - STANDARD_HOURS);
         attendance.setOvertimeHours(overtime);
 

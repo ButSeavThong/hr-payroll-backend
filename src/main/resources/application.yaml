@@ -1,4 +1,6 @@
 spring:
+  jackson:
+    time-zone: Asia/Phnom_Penh
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
